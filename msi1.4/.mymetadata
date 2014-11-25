@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="msi1.4"
+  id="myeclipse.1365387273527"
+  context-root="/MultiScreenInteractive1.0"
+  j2ee-spec="5.0"
+  archive="msi1.4.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

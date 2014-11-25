@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    tools:context=".GeneralActivity" 
+    android:orientation="vertical"
+    android:background="#5565ff">
+
+<ImageButton 
+        android:src="@drawable/up"
+        android:id="@+id/upButtonGeneral2"
+        android:layout_width="wrap_content"
+        android:layout_height="61px" 
+        android:layout_marginLeft="40pt"
+           />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+       <ImageButton 
+        android:src="@drawable/left"
+        android:id="@+id/leftButtonGeneral2"
+        android:layout_width="wrap_content"
+        android:layout_height="61px" 
+           />
+        <ImageButton 
+        android:src="@drawable/ok"
+        android:id="@+id/okButtonGeneral2"
+        android:layout_width="wrap_content"
+        android:layout_height="61px" 
+           />
+       <ImageButton 
+        android:src="@drawable/right"
+        android:id="@+id/rightButtonGeneral2"
+        android:layout_width="wrap_content"
+        android:layout_height="61px" 
+           />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/downButtonGeneral2"
+        android:layout_width="wrap_content"
+        android:layout_height="61px"
+        android:src="@drawable/down" 
+        android:layout_marginLeft="40pt"/>
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal" >
+
+         <ImageButton
+             android:id="@+id/backButtonGeneral2"
+             android:layout_width="150px"
+             android:layout_height="61px"
+             android:src="@drawable/back" />
+
+         <ImageButton
+             android:id="@+id/homeButtonGeneral2"
+             android:layout_width="150px"
+             android:layout_height="61px"
+             android:layout_weight="1.34"
+             android:src="@drawable/home" />
+
+         <ImageButton
+             android:id="@+id/exitButtonGeneral2"
+             android:layout_width="150px"
+             android:layout_height="61px"
+             android:src="@drawable/exit" />
+     </LinearLayout>
+    
+
+</LinearLayout>
+
+
+
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <servlet>
+    <servlet-name>SwitchScreenServlet</servlet-name>
+    <servlet-class>vonzhou.servlet.SwitchScreenServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>EnterServlet</servlet-name>
+    <servlet-class>vonzhou.servlet.EnterServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>IndexServlet</servlet-name>
+    <servlet-class>vonzhou.servlet.IndexServlet</servlet-class>
+  </servlet>
+   <servlet>
+    <servlet-name>IndexServlet2</servlet-name>
+    <servlet-class>vonzhou.servlet.IndexServlet2</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Enter2IndexServlet</servlet-name>
+    <servlet-class>vonzhou.servlet.Enter2IndexServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GeneralServlet4Android</servlet-name>
+    <servlet-class>vonzhou.servlet.GeneralServlet4Android</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>MediaPushServlet</servlet-name>
+    <servlet-class>vonzhou.servlet.MediaPushServlet2</servlet-class>
+  </servlet>
+
+
+
+  <servlet-mapping>
+  <servlet-name>SwitchScreenServlet</servlet-name>
+  <url-pattern>/SwitchScreenServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  <servlet-name>EnterServlet</servlet-name>
+  <url-pattern>/EnterServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>IndexServlet</servlet-name>
+    <url-pattern>/IndexServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>IndexServlet2</servlet-name>
+    <url-pattern>/IndexServlet2</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Enter2IndexServlet</servlet-name>
+    <url-pattern>/Enter2IndexServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GeneralServlet4Android</servlet-name>
+    <url-pattern>/GeneralServlet4Android</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MediaPushServlet</servlet-name>
+    <url-pattern>/MediaPushServlet</url-pattern>
+  </servlet-mapping>
+</web-app>

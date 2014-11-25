@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="1280*720;text/html; charset=gb2312">
+<title>JSDemo</title>
+<style type="text/css">
+</style>
+<script language="JavaScript" type="text/JavaScript">
+var volume=50;
+var mp= new MediaPlayer();
+alert("\n====进入JS播放页面====\n");
+function grabEvent(e)
+{
+var val = e.which || e.keyCode;
+switch(val)
+{
+case 449://静音
+mp.setMuteFlag((mp.getMuteFlag()+ 1)%2);
+break;
+case 447:
+volume = volume + 10;
+mp.setVolume(volume);
+break;
+case 448:
+volume = volume - 10;
+mp.setVolume(volume);
+break;
+case 768://播放事件
+var ev = Utility.getEvent();
+var errorCode = 0;
+var speedRate = 0;
+var json = eval(ev);
+if (!isNaN(json.error_code)) errorCode = parseInt(json.error_code,
+10);
+//下面是对快进或者快退操作成功的处理
+if (json.type.toUpperCase() == "EVENT_PLAYMODE_CHANGE"
+&& json.new_play_mode == 3 && !isNaN(json.new_play_rate))
+speedRate = parseInt(json.new_play_rate, 10);
+if(json.type.toUpperCase() == "EVENT_MEDIA_ERROR")
+{
+if(errorCode == 28)
+{
+alert("前端停播");
+}
+if(errorCode == 31)
+{
+alert("signal lost");
+}
+}
+break;
+case 769: //CA的警告消息
+var evt = DVB.getEvent(DVB.EVT_TYPE_CA_ALARM);
+if (evt.msgSubType == 0) //CA 卡插入消息
+{
+insertCA();
+}
+else if (evt.msgSubType == 1) //CA 卡拔出消息
+{
+pulloutCA();
+}
+break;
+case 3864://pause
+mp.pause();
+break;
+case 3862://resume
+mp.resume();
+break;
+case 3863://stop
+mp.stop();
+break;
+case 3873://快退
+mp.setAllowTrickmodeFlag(0);
+mp.fastRewind(2);
+break;
+case 3874://快进
+mp.setAllowTrickmodeFlag(0);
+mp.fastForward(2);
+break;
+case 3880://定位
+mp.playByTime(2,'20090629T175412Z',1);
+break;
+case 48:
+mp.setSingleMedia("deliver://259000000.6875.64.8");
+mp.playFromStart();
+break;
+case 49:
+mp.setSingleMedia("deliver://259000000:6875:64:9");
+mp.playFromStart();
+break;
+case 50:
+mp.setSingleMedia("deliver://259000000:6875:64:1901");
+mp.playFromStart();
+break;
+case 51:
+//小窗口播放的示例代码
+mp.setVideoDisplayMode(0);
+mp.setVideoDisplayArea(100,200,500,200);
+mp.refreshVideoDisplay();
+break;
+case 407://声道测试
+mp.switchAudioChannel();
+break;
+case 53://音轨测试
+mp.switchAudioTrack();
+break;
+case 54:
+mp.setAllowTrickmodeFlag(0);
+mp.fastForward(2);
+break;
+default:
+break;
+}
+}
+document.onirkeypress = grabEvent;
+document.onkeypress = grabEvent;
+</script>
+</head>
+<body bgcolor="transparent">
+<span id="info"
+style="position:absolute;width:800px;height:300px;top:250px;left:10px;visibility:none;fon
+t-size:24px;word-break:break-all;">
+<table width="100%">
+<tr>
+<td id="info2">
+</td>
+</tr>
+</table>
+</span>
+</body>

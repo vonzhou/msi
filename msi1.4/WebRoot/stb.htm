@@ -1,0 +1,1032 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="1280*720;text/html; charset=gb2312" />
+<title></title>
+<script>
+// ajax
+var xmlHttp;//从list.xml加载菜单树；
+var xmlHttp2;
+var xmlHttp4;//定时从monitor页面获取来自Android端的控制信号；
+var config;
+var menu;
+var adsinfo;
+var bgImage;
+var showinfo;
+
+//the info of focus
+var onfocusImage;
+var onfocusImage_left;
+var onfocusImage_top;
+var onfocusImage_width;
+var onfocusImage_height;
+var listFocusFontColor;
+var listFontColor;
+
+//the info of mainMenu
+var pic_left;
+var pic_right;
+var pic_top;
+var pic_height;
+var pic_width;
+var pic_dis;
+
+//the info of list
+var list_left;
+var list_top;
+var list_bottom;
+var list_width;
+var list_height;
+var list_dis;
+
+var listTopArrow_image;
+var listTopArrow;
+var listTopArrow_left;
+var listTopArrow_top;
+var listTopArrow_width;
+var listTopArrow_height;
+var listBottomArrow_image;
+var listBottomArrow;
+var listBottomArrow_left;
+var listBottomArrow_top;
+var listBottomArrow_width;
+var listBottomArrow_height;
+
+//the info of ads
+var ads_width;
+var ads_height;
+var ads_top;
+
+//the info of menu
+var elementInfo = new Array(5);
+var menuLength ;
+var menuLengthFact;//实际menu个数
+var elementPreFocusFlag = 0;
+var elementFocusFlag = 3;
+
+var elementMenu;
+var elementSequence;
+var elementMenuSequence;
+var elementHidden;
+
+var effectMenuLeft;
+var effectMenuCutLeft;
+var effectMenuRight;
+var effectMenuCutRight;
+
+var elementFlag = 3;
+var listFocusBottomEffect;
+
+//the info of list
+var elementListLength;
+var elementListFocusFlag = 0;
+var listBottom;
+var elementList;
+var elementListHidden;
+
+var effectListUp;
+var effectListCutUp;
+var effectListDown;
+var effectListCutDown;
+
+var elementListFocus;
+
+//the info of ads
+var adsLength = 6;
+var currentAdsFlag;
+var elementAds = new Array(adsLength);
+var elementAdsHidden=  new Array(adsLength);
+var effectAdsLeft;
+var effectAdsRight;
+var effectAdsHiddenLeft;
+var effectAdsHiddenRight;
+var adsSuffix;
+
+//the info of effect
+var timer;
+
+var canvas = new Canvas(0,0,1280,720);
+var controlNew = new EffectControl();
+var Menutime = 0;
+var Menucount = 13;
+
+var Listtime = 0;
+var Listcount = 20;
+
+var Cuttime = 0;
+var Cutcount = 10;
+
+var listFont = 26;
+var listFocusFont = 26;
+var flag = 0;
+
+var ajaxFinish = 0;
+var Type; //record the key type or move direction
+
+var weather
+var weatherCity;
+var weatherForecast;
+var todate;
+var weatherWind="";
+var degree="";
+var weatherName = "";
+var windName = "";
+var wind = "";
+var degreeLow = "";
+var degreeHigh = "";
+var picture = "";
+var pictureUrl;
+var imageHost;
+
+
+var timerValuePre=-1;//利用本次ajax请求获得的定时器值，与之前的进行比较如果相同
+  //则表示无效，否则进行响应，并且更新timerValuePre
+ var timerValueCurrent=null;//
+  
+
+function GetXmlHttpObject4(handler){ 
+		var x=null;
+		x=new XMLHttpRequest();
+		if(x.overrideMimeType){
+			x.overrideMimeType('text/xml'); 
+		}	
+		x.onload=handler ;
+		x.onerror=handler ;
+		return x;
+	}
+    var which="error";
+    function doaction(){
+    	if (xmlHttp4.readyState==4 || xmlHttp4.readyState=="complete"){
+			document.getElementById("content").innerHTML=xmlHttp4.responseText;
+			which=document.getElementById("which").innerHTML;
+			var key=Number(document.getElementById("key").innerHTML);
+			timerValueCurrent=Number(document.getElementById("timer").innerHTML);
+			if(timerValuePre!=timerValueCurrent){
+				timerValuePre=timerValueCurrent;
+				switch(key){
+					case -1://key invalid,do nothing.
+						break;
+					case 39: //right
+						clearTimeout(timer);
+						e.preventDefault();  
+			 			KeyLeftandRight(-1);
+						timer = setTimeout("changeMenu(-1);",300);
+						break; 
+					case 37:   //left
+						clearTimeout(timer);
+						 e.preventDefault();  
+			 			KeyLeftandRight(1);
+						timer = setTimeout("changeMenu(" + 1 + ");",300);
+						break;
+					case 40:  //down key
+						clearTimeout(listtimer);
+						 e.preventDefault();  
+			 			keyUpDown(1);
+			 			listtimer = setTimeout("cutAds(1);",300);
+						break;
+					case 38:  //up key
+						clearTimeout(listtimer);
+						 e.preventDefault();  
+			 			keyUpDown(-1);
+			 			listtimer = setTimeout("cutAds(-1);",300);
+						break; 
+					case 13:  //enter
+					funonclick(elementFocusFlag,elementListFocusFlag, "");
+						break;	
+					case 640://back
+						break;
+					case 468://home
+						window.location.href="home.jsp";
+					break;
+				}//end switch
+	
+    		}
+    		}
+	}
+	function startXMLHttp(){
+		var url = "generalMonitor.jsp" ;
+		var callbackfun= doaction ;
+		xmlHttp4=GetXmlHttpObject4(callbackfun);
+		xmlHttp4.open("GET", url , true);
+		xmlHttp4.send(null);
+		
+		setTimeout("startXMLHttp()" , 1500);
+	}
+
+
+	
+
+function cancelVodStatus() {
+    setGlobalVar("VOD_ADDR", "");
+    setGlobalVar("menuFocusIndex", "");
+    setGlobalVar("menudFocusDisplayIndex", "");
+    setGlobalVar("listFocusIndex", "");
+    setGlobalVar("listFocusDisplayIndex", "");
+}
+
+function setGlobalVar(sName, sValue){	
+	try{
+		Utility.setEnv(sName, sValue);
+	}catch(e){
+		document.cookie = escape(sName) + "=" + escape(sValue);
+	}
+}
+
+function loadPage() {
+    cancelVodStatus();
+    initPage();
+    startXMLHttp();
+	//setTimeout("initPage()",100);
+	
+}//end loadPage
+
+function initPage(){
+	AppManager.invoke("Panel", "portal", "POAt");
+	AppManager.invoke("Player", "stop","");
+	setGlobalVar("PORTAL_ADDR", location.href);
+	setGlobalVar("userId","$!userId");
+	ajaxUrl('xml/list.xml','getMenuXml');//加载菜单树
+}//end initPage
+
+function ajaxUrl(url,callbackfun){
+	xmlHttp=GetXmlHttpObject(eval(callbackfun));
+	xmlHttp.open("GET", url , true);
+	xmlHttp.send(null);
+}
+
+function ajaxUrl2(url,callbackfun){
+	xmlHttp2=GetXmlHttpObject(eval(callbackfun));
+	xmlHttp2.open("GET", url , true);
+	xmlHttp2.send(null);
+}
+
+function GetXmlHttpObject(handler){ 
+	var objXmlHttp=null;
+	objXmlHttp=new XMLHttpRequest()
+	if (objXmlHttp.overrideMimeType){
+		objXmlHttp.overrideMimeType('text/xml'); 
+	}	
+	objXmlHttp.onload=handler
+	objXmlHttp.onerror=handler 
+	return objXmlHttp
+}
+
+/***************get the xml information**********/
+var weatherList_url;
+function getMenuXml(){
+	if (xmlHttp.readyState==4 || xmlHttp.readyState=="complete"){
+		xmlroot = xmlHttp.responseXML.getElementsByTagName("tree");
+		config = xmlroot[0].getElementsByTagName("config");
+		menu = xmlroot[0].getElementsByTagName("cate");
+		adsinfo =  xmlroot[0].getElementsByTagName("ads");
+		showinfo = xmlroot[0].getElementsByTagName("showInfo");
+		bgImage = config[0].getAttribute("bgImage");
+		imageHost =config[0].getAttribute("imageHost");
+		weatherList_url = config[0].getAttribute("weatherList_url1");
+		if(weatherList_url==undefined || weatherList_url==null || weatherList_url==""){
+			weatherList_url = config[0].getAttribute("weatherList_url2");
+		}
+		//menu
+		pic_left = parseInt(config[0].getAttribute("pic_left"));
+		pic_top = parseInt(config[0].getAttribute("pic_top"));
+		pic_width = parseInt(config[0].getAttribute("pic_width"));
+		pic_height = parseInt(config[0].getAttribute("pic_height"));
+		pic_dis = parseInt(config[0].getAttribute("pic_dis"));
+		
+		//list
+		listFocusFontColor = config[0].getAttribute("onfocusFonts_color");
+		listFontColor = config[0].getAttribute("style_font_color");
+		onfocusImage = config[0].getAttribute("onfocusImage");
+		onfocusImage_left = parseInt(config[0].getAttribute("onfocusImage_left"));
+		onfocusImage_top = parseInt(config[0].getAttribute("onfocusImage_top"));
+		onfocusImage_width = parseInt(config[0].getAttribute("onfocusImage_width"));
+		onfocusImage_height = parseInt(config[0].getAttribute("onfocusImage_height"));
+		list_left = parseInt(config[0].getAttribute("list_left"));
+		list_top = parseInt(config[0].getAttribute("list_top"));
+		list_width = parseInt(config[0].getAttribute("list_width"));
+		list_height = parseInt(config[0].getAttribute("list_height"));
+		list_dis = parseInt(config[0].getAttribute("list_dis"));
+
+		listTopArrow = config[0].getAttribute("listTopArrow");
+		listTopArrow_left = parseInt(config[0].getAttribute("listTopArrow_left"));
+		listTopArrow_top = parseInt(config[0].getAttribute("listTopArrow_top"));
+		listTopArrow_width = parseInt(config[0].getAttribute("listTopArrow_width"));
+		listTopArrow_height = parseInt(config[0].getAttribute("listTopArrow_height"));
+		listBottomArrow = config[0].getAttribute("listBottomArrow");
+		listBottomArrow_left = parseInt(config[0].getAttribute("listBottomArrow_left"));
+		listBottomArrow_top = parseInt(config[0].getAttribute("listBottomArrow_top"));
+		listBottomArrow_width = parseInt(config[0].getAttribute("listBottomArrow_width"));
+		listBottomArrow_height = parseInt(config[0].getAttribute("listBottomArrow_height"));
+
+		//ads
+		ads_top = parseInt(adsinfo[0].getAttribute("ads_top"));
+		ads_width = parseInt(adsinfo[0].getAttribute("ads_width"));
+		ads_height = parseInt(adsinfo[0].getAttribute("ads_height"));
+		adsSuffix = adsinfo[0].getAttribute("adsSuffix");
+	
+		//other values
+		menuLengthFact = menu.length;
+		menuLength = parseInt(config[0].getAttribute("menuLength"));
+		if(isNaN(menuLength))
+			menuLength = 9;
+
+		elementListLength = parseInt(config[0].getAttribute("maxPage"));
+		listBottom = list_top + (elementListLength - 1) * list_dis;
+	
+		canvas.bgImage = bgImage;
+		initMenu();
+		initList();
+		showOtherInfo();
+
+		ajaxFinish = 1;
+		canvas.refresh();
+		//setTimeout("showAds()",100);
+		
+	}
+	//setTimeout("startXMLHttp()" , 100);
+	//setTimeout(function (){ajaxUrl3(weatherList_url,"showDayAndWeather")},1000);
+	//setInterval(function (){ajaxUrl3(weatherList_url,"showDayAndWeather")},60000);	
+	
+}//end getMenuXml
+
+var xmlhttp3;
+function ajaxUrl3(url, handler) {
+	if (window.XMLHttpRequest) {
+		xmlHttp3 = new XMLHttpRequest();
+		if (xmlHttp3.overrideMimeType) {
+			xmlHttp3.overrideMimeType("text/xml");
+		}
+	} else {
+		if (window.ActiveXObject) {
+			xmlHttp3 = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	xmlHttp3.onreadystatechange = function () {
+		if (xmlHttp3.readyState == 4) {
+			if (xmlHttp3.status == 200) {
+			eval(handler+"()");
+			}else{
+			//	alert("ajax超时！！！")
+			}
+		}
+	};
+	xmlHttp3.open("GET", url, true);
+	xmlHttp3.send(null);
+}
+
+function showDayAndWeather(){
+var resText = xmlHttp3.responseText;
+var weatherList =eval("("+resText+")");
+	elementInfo[2].image = imageHost+weatherList.dataList[0].img;
+	elementInfo[3].string = weatherList.dataList[0].low+"~"+weatherList.dataList[0].high+"℃";
+	elementInfo[4].string =  weatherList.dataList[0].conditionDesc+"("+weatherList.dataList[0].windspeed+")";
+	elementInfo[4].type = "left";
+	canvas.refresh();
+}
+
+function  initMenu(){
+	elementMenu = new Array(menuLength+1);
+	elementSequence = new Array(menuLength);
+	elementMenuSequence = new Array(menuLength);
+	effectMenuLeft = new Array(menuLength);
+	effectMenuRight = new Array(menuLength);
+	var global = Utility.getEnv("currentFocus");
+	if(global == null || global == ""){
+		elementFocusFlag = parseInt(config[0].getAttribute("index"));
+		currentAdsFlag = elementFocusFlag;
+	}else{
+		elementFocusFlag = parseInt(global);
+		currentAdsFlag = elementFocusFlag;
+	}
+		
+	//显示背景和menu的信息
+	showMenu();
+}
+
+var midPosIndex = 0;
+var endLeft;
+var startLeft;
+function showMenu(){
+	midPosIndex = Math.floor((menuLength - 1) / 2);
+	var posOffset = 0;
+	if (elementFocusFlag != midPosIndex){		
+		posOffset = elementFocusFlag - midPosIndex;//证明中间位置发生了偏移
+	}
+
+	var temp_left = pic_left;
+	var num;
+	var attributeName;
+	startLeft = pic_left;
+	for(var i=0; i<menuLength; i++){
+		num = ((menuLengthFact + posOffset + i) % menuLengthFact);	
+
+		pic_right = temp_left;
+		attributeName = "pic";
+		if (i == midPosIndex) attributeName = "icon";
+		elementMenu[i] = new ImageElement(temp_left,pic_top,pic_width,pic_height,menu[num].getAttribute(attributeName));
+		if(i == 0){
+			effectMenuLeft[i] = new Effect("cutout","left",Menutime,Menucount);
+			effectMenuRight[i] = new Effect("move",temp_left,pic_top,temp_left+pic_dis,pic_top,Menutime,Menucount);
+
+		}else if(i == menuLength-1){
+			effectMenuRight[i] = new Effect("cutout","right",Menutime,Menucount);
+			effectMenuLeft[i] = new Effect("move",temp_left,pic_top,temp_left-pic_dis,pic_top,Menutime,Menucount);
+
+		}else if(i == midPosIndex + 1)	{
+			effectMenuLeft[i] = new Effect("blendzoom",temp_left,(pic_top+pic_height/2),0,0,temp_left-pic_dis,pic_top,pic_width,pic_height,0,100,Menutime,Menucount);
+			effectMenuRight[i] = new Effect("move",temp_left,pic_top,temp_left+pic_dis,pic_top,Menutime,Menucount);
+
+		}else if(i == midPosIndex -1){
+			effectMenuRight[i] = new Effect("blendzoom",temp_left,(pic_top+pic_height/2),0,0, temp_left+pic_dis,pic_top,pic_width,pic_height,0,100,Menutime,Menucount);
+			effectMenuLeft[i] = new Effect("move",temp_left,pic_top,temp_left-pic_dis,pic_top,Menutime,Menucount);
+		}else{
+			effectMenuLeft[i] = new Effect("move",temp_left,pic_top,temp_left-pic_dis,pic_top,Menutime,Menucount);
+			effectMenuRight[i] = new Effect("move",temp_left,pic_top,temp_left+pic_dis,pic_top,Menutime,Menucount);
+		}
+		temp_left += pic_dis;
+		canvas.add(elementMenu[i]);
+	}
+	endLeft = temp_left - pic_dis;
+
+	elementMenu[i] = new ImageElement(0,pic_top,pic_width,pic_height," ");
+	elementMenu[i].visible = false;
+	canvas.add(elementMenu[i]);
+
+	effectMenuCutLeft = new Effect("cutin","right",Menutime,Menucount);
+	effectMenuCutRight = new Effect("cutin","left",Menutime,Menucount);
+	listFocusBottomEffect = new Effect("transparent",100,100,Listtime,Listcount);
+}//end showMenu
+
+
+function initList(){		
+	var temp_elementListFocusFlag = Utility.getEnv("elementListFocusFlagId");
+	if (temp_elementListFocusFlag != null && temp_elementListFocusFlag != "")
+		elementListFocusFlag = parseInt(temp_elementListFocusFlag);
+
+	var temp_displayFocusIndex = Utility.getEnv("displayFocusIndex");
+	if (temp_displayFocusIndex != null && temp_displayFocusIndex != "")
+		displayFocusIndex = parseInt(temp_displayFocusIndex);
+
+	elementList = new Array(elementListLength+1);
+	effectListUp = new Array(elementListLength);
+	effectListDown = new Array(elementListLength);
+
+	showListFocus();
+	showList();
+}
+
+function showList(){
+
+	var temp_top = list_top;
+	
+	for(var i=0; i<elementListLength; i++){
+
+		list_bottom = temp_top;
+
+		elementList[i] = new TextElement(list_left,temp_top,list_width,list_height," ");
+		if( i==0 ){
+			effectListUp[i] = new Effect("cutout","top",Listtime,Listcount);
+			effectListDown[i] = new Effect("move",list_left,temp_top,list_left,temp_top+list_dis,Listtime,Listcount);
+		}else if(i == elementListLength-1){
+			effectListDown[i] = new Effect("cutout","bottom",Listtime,Listcount);
+			effectListUp[i] = new Effect("move",list_left,temp_top,list_left,temp_top-list_dis,Listtime,Listcount);
+		}else{
+			effectListUp[i] = new Effect("move",list_left,temp_top,list_left,temp_top-list_dis,Listtime,Listcount);
+			effectListDown[i] = new Effect("move",list_left,temp_top,list_left,temp_top+list_dis,Listtime,Listcount);
+		}
+		temp_top += list_dis;
+		
+		canvas.add(elementList[i]);
+
+	}
+	listTopArrow_image = new ImageElement(listTopArrow_left,listTopArrow_top,listTopArrow_width,listTopArrow_height,"");
+	listBottomArrow_image = new ImageElement(listBottomArrow_left,listBottomArrow_top,listBottomArrow_width,listBottomArrow_height,"");
+	//when the first in and urlFocus and elementListFocus = Null
+	canvas.add(listTopArrow_image);
+	canvas.add(listBottomArrow_image);
+
+	elementList[i] = new TextElement(list_left,0,list_width,list_height," ");
+	elementList[i].visible = false;
+	canvas.add(elementList[i]);
+
+	effectListCutUp = new Effect("cutin","bottom",Listtime,Listcount);
+	effectListCutDown = new Effect("cutin","top",Listtime,Listcount);
+	
+	showListItem();
+
+}//end showList
+
+
+
+function showListFocus(){
+	elementListFocus = new ImageElement(onfocusImage_left,onfocusImage_top+(displayFocusIndex)*list_dis,onfocusImage_width,onfocusImage_height,onfocusImage);
+	canvas.add(elementListFocus);
+}
+
+
+
+/******************show List Item*************************/
+var list = [];
+function showListItem(){
+	list = menu[elementFocusFlag].getElementsByTagName("movie");
+	var len = Math.min(elementListLength, list.length);
+	var index = elementListFocusFlag - displayFocusIndex;
+	for(var i=0;i<len;i++){
+		elementList[i].string = list[index].getAttribute("title");
+		elementList[i].size = listFont;
+		elementList[i].color = listFontColor;
+		index++;
+	}
+	for(var i=len;i<elementListLength;i++)
+		elementList[i].string = "";
+
+	//var focusIndex = (elementListFocusFlag >= elementListLength) ? (elementListLength - 1) : elementListFocusFlag;
+	elementList[displayFocusIndex].color = listFocusFontColor;
+	elementList[displayFocusIndex].size = listFocusFont;
+
+	showArrow();
+	canvas.refresh();
+
+}//end showListItem
+
+function showArrow(){
+	listBottomArrow_image.image = "";
+	listTopArrow_image.image = "";
+	if(elementListFocusFlag <list.length - 1){
+		listBottomArrow_image.image = listBottomArrow;//显示list底部的三角图片
+	}
+	if(elementListFocusFlag > 0)
+		listTopArrow_image.image = listTopArrow;
+
+}
+/******************show Ads*************************/
+function showAds(){
+	var temp_left;
+	for(var i=0; i<adsLength;i++){
+		temp_left = adsinfo[0].getAttribute("ads_left"+i);
+	 	elementAds[i] = new ImageElement(temp_left,ads_top,ads_width,ads_height,list[elementListFocusFlag].getAttribute("adsPrefix")+(i+1)+adsSuffix);										 		//menu[elementFocusFlag].getAttribute("adsPrefix")
+	 	elementAdsHidden[i] = new ImageElement(temp_left,ads_top,ads_width,ads_height," ");
+	 	canvas.add(elementAds[i]);
+	 	canvas.add(elementAdsHidden[i]);
+	}
+
+	effectAdsLeft = new Effect("cutout","left",Cuttime,Cutcount);
+	effectAdsHiddenLeft = new Effect("cutin","right",Cuttime,Cutcount);
+	effectAdsRight = new Effect("cutout","right",Cuttime,Cutcount);
+	effectAdsHiddenRight = new Effect("cutin","left",Cuttime,Cutcount);
+
+	controlNew.beginParallel();
+	for(var j=0; j<3; j++){
+
+		elementAds[j].setEffect(effectAdsHiddenRight);
+		elementAds[j].doEffect();
+		elementAds[j+3].setEffect(effectAdsHiddenLeft);
+		elementAds[j+3].doEffect();
+	 }
+	controlNew.endParallel();
+}//end showAds
+
+function showOtherInfo(){
+	var infolist = showinfo[0].getElementsByTagName("info");
+	for(var i=0; i<infolist.length; i++){
+		if(infolist[i].getAttribute("info_type") == "image"){
+			if(i!=2){
+				elementInfo[i] = new ImageElement(infolist[i].getAttribute("info_left"),infolist[i].getAttribute("info_top"),infolist[i].getAttribute("info_width"),infolist[i].getAttribute("info_height"),infolist[i].getAttribute("info_info"));
+			}else{
+				elementInfo[i] = new ImageElement(infolist[i].getAttribute("info_left"),infolist[i].getAttribute("info_top"),infolist[i].getAttribute("info_width"),infolist[i].getAttribute("info_height"),"");//infolist[i].getAttribute("info_info");
+			}
+		}else{
+				elementInfo[i] = new TextElement(infolist[i].getAttribute("info_left"),infolist[i].getAttribute("info_top"),infolist[i].getAttribute("info_width"),infolist[i].getAttribute("info_height"),"");//infolist[i].getAttribute("info_info");
+				elementInfo[i].size = infolist[i].getAttribute("info_size");
+				elementInfo[i].type = "left";
+		}
+	canvas.add(elementInfo[i]);
+	}
+}//end showOtherInfo
+
+/***********move the element to left and right*********/
+function cutAds(type){
+	var tmpAdsPrefix = list[elementListFocusFlag].getAttribute("adsPrefix");//menu[elementFocusFlag].getAttribute("adsPrefix");
+
+	var cutInDirection,cutOutDirection;
+	if(type == 1){ //right
+		cutInDirection = effectAdsHiddenRight;
+		cutOutDirection = effectAdsRight;
+	}else {  //left
+		cutInDirection = effectAdsHiddenLeft;
+		cutOutDirection = effectAdsLeft;
+	}
+	controlNew.beginParallel();
+
+	for(var i=0; i<adsLength; i++){  
+		elementAdsHidden[i].image= tmpAdsPrefix+(i+1)+adsSuffix;
+		elementAds[i].setEffect(cutOutDirection);
+		elementAds[i].doEffect();
+
+		elementAdsHidden[i].setEffect(cutInDirection);
+		elementAdsHidden[i].doEffect();
+	}
+
+	controlNew.endParallel();
+	var tmp = elementAdsHidden;
+	elementAdsHidden = elementAds;
+	elementAds = tmp;
+
+	for(var i=0; i<adsLength; i++){
+		elementAdsHidden[i].visible = false;
+	}
+}//end  cutAds
+
+var displayFocusIndex = 0;
+function KeyLeftandRight(type){//左右键驱动事件
+	elementPreFocusFlag = elementFocusFlag;
+	elementListFocusFlag = 0
+	displayFocusIndex = 0;
+	elementListFocus.y = list_top;
+	
+	var menuHiddenEffect;
+	var temp;
+	var nextMidPosIndex = midPosIndex;
+	if (type == 1){ //right	
+		elementFocusFlag -= 1;
+		if (elementFocusFlag < 0) elementFocusFlag = menuLengthFact - 1;
+		hiddenIndex = ((menuLengthFact + (elementPreFocusFlag - midPosIndex)) % menuLengthFact) - 1;
+		
+		elementMenu[menuLength].x = startLeft;
+		menuHiddenEffect = effectMenuCutRight;
+		nextMidPosIndex -= 1;
+	}else{ //left
+		elementFocusFlag += 1;
+		if (elementFocusFlag >= menuLengthFact ) elementFocusFlag = 0;
+		hiddenIndex = ((menuLengthFact + (elementPreFocusFlag - midPosIndex) + (menuLength - 1)) % menuLengthFact) + 1;
+		
+		elementMenu[menuLength].x = endLeft;	
+		menuHiddenEffect = effectMenuCutLeft;
+		nextMidPosIndex += 1;
+	}
+	if (hiddenIndex < 0) hiddenIndex = menuLengthFact - 1;
+	else if (hiddenIndex > menuLengthFact - 1) hiddenIndex = 0;	
+	while(temp<0)
+		temp = temp + menuLength + 1;		
+	
+	elementMenu[menuLength].image = menu[hiddenIndex].getAttribute("pic");
+	elementMenu[midPosIndex].image = menu[elementPreFocusFlag].getAttribute("pic");
+	elementMenu[nextMidPosIndex].image = menu[elementFocusFlag].getAttribute("icon");
+	
+	controlNew.beginParallel();
+	
+	for(var i=0; i<menuLength; i++){
+		if(type == -1){ //left
+		
+			elementMenu[i].setEffect(effectMenuLeft[i]);
+		}else{  //right
+		
+			elementMenu[i].setEffect(effectMenuRight[i]);
+		}
+		elementMenu[i].doEffect();
+	}
+	elementMenu[menuLength].setEffect(menuHiddenEffect);
+	elementMenu[menuLength].doEffect();
+	
+	controlNew.endParallel();
+
+	resetElement(type);
+}
+
+//特效后要重新排序
+function resetElement(type){
+	if(type == -1){ 	//left
+		var tempElement = elementMenu[0];
+		for(var i=0; i<menuLength; i++)
+			elementMenu[i] = elementMenu[i+1];
+		elementMenu[menuLength] = tempElement;
+	}else{	//right
+	
+		var tempElement = elementMenu[menuLength];
+		for(var i=menuLength; i>0; i--)
+			elementMenu[i] = elementMenu[i-1];
+		elementMenu[0] = tempElement;
+	}
+	elementMenu[menuLength].visible = false;	
+}
+
+function keyUpDown(type){
+	if (elementListFocusFlag >= list.length - 1 && type > 0){ 
+		Operation(5);
+	}else if (elementListFocusFlag <= 0 && type < 0){ 
+		Operation(6); 
+	}else{	
+		elementListFocusFlag += type;
+		predisplayFocusIndex = displayFocusIndex;
+		displayFocusIndex += type;
+		if (type > 0 ){ // down
+			if (displayFocusIndex > elementListLength) displayFocusIndex = elementListLength;
+			
+			if (displayFocusIndex >= elementListLength){
+				displayFocusIndex = elementListLength - 1;
+				Operation(2);
+			}else{
+				Operation(1);
+			}		
+		}else{
+			if (displayFocusIndex < 0){
+				displayFocusIndex = 0;
+				Operation(3);
+			}else{
+				Operation(4);
+			}		
+		}		
+	}
+	showArrow();
+	canvas.refresh();
+}
+var predisplayFocusIndex = 0;
+function Operation(type){	
+	switch(type){
+		case 1: //焦点下移动一个
+			{	
+				elementList[predisplayFocusIndex].color = listFontColor;
+				elementList[predisplayFocusIndex].size = listFont;
+				//controlNew.beginParallel();
+				elementListFocus.setEffect(effectListDown[predisplayFocusIndex]);
+				elementListFocus.doEffect();			
+				elementList[displayFocusIndex].color = listFocusFontColor;
+				elementList[displayFocusIndex].size = listFocusFont;
+				elementList[displayFocusIndex].setEffect(listFocusBottomEffect);
+				elementList[displayFocusIndex].doEffect();				
+				//controlNew.endParallel();
+			}
+			break;
+		case 2: //焦点在showlen的最后一个不动，文字向上滚动
+			{
+				controlNew.beginParallel();
+				for(var i=0; i<elementListLength; i++){
+					elementList[i].color = listFontColor;
+					elementList[i].size = listFont;
+					elementList[i].setEffect(effectListUp[i]);
+					elementList[i].doEffect();
+				}			
+				elementList[elementListLength].string=list[elementListFocusFlag].getAttribute("title");
+				elementList[elementListLength].color = listFocusFontColor;
+				elementList[elementListLength].size = listFocusFont;
+				elementList[elementListLength].y = listBottom;
+				elementList[elementListLength].x = list_left;
+				elementList[elementListLength].setEffect(effectListCutUp);
+				elementList[elementListLength].doEffect();
+				controlNew.endParallel();
+				
+				var tempElement = elementList[0];
+				for(var i=0; i<elementListLength; i++){
+					elementList[i] = elementList[i+1];
+				}
+				elementList[elementListLength] = tempElement;
+				elementList[elementListLength].visible = false;
+			}
+			break;
+		case 3:  //焦点在showlen的第一个不动，文字向下滚动
+			{
+				controlNew.beginParallel();
+				for(var i=0; i<elementListLength; i++){
+					elementList[i].color = listFontColor;
+					elementList[i].size = listFont;
+					elementList[i].setEffect(effectListDown[i]);
+					elementList[i].doEffect();
+				}
+				elementList[elementListLength].string=list[elementListFocusFlag].getAttribute("title");
+				elementList[elementListLength].y=list_top;
+				elementList[elementListLength].x=list_left;
+				elementList[elementListLength].color = listFocusFontColor;
+				elementList[elementListLength].size = listFocusFont;
+				elementList[elementListLength].setEffect(effectListCutDown);
+				elementList[elementListLength].doEffect();
+				controlNew.endParallel();
+				
+				var tempElement = elementList[elementListLength];
+				for(var i=elementListLength; i>0; i--){
+					elementList[i] = elementList[i-1];
+				}
+				elementList[0] = tempElement;
+				elementList[elementListLength].visible = false;
+			}
+			break;
+		case 4: //焦点上移一个
+			{
+				elementList[predisplayFocusIndex].color = listFontColor;				
+				elementList[predisplayFocusIndex].size = listFont;
+				//controlNew.beginParallel();
+				elementListFocus.setEffect(effectListUp[predisplayFocusIndex]);
+				elementListFocus.doEffect();
+				elementList[displayFocusIndex].color = listFocusFontColor;
+				elementList[displayFocusIndex].size = listFocusFont;
+				elementList[displayFocusIndex].setEffect(listFocusBottomEffect);
+				elementList[displayFocusIndex].doEffect();				
+				//controlNew.endParallel();
+			}
+			break;
+		case 5: //焦点回滚到第一个元素
+			{
+				elementListFocusFlag = 0;
+				predisplayFocusIndex = displayFocusIndex;
+				displayFocusIndex = 0;
+				tempEffect = new Effect("move",list_left,list_top+predisplayFocusIndex*list_dis,list_left,list_top+displayFocusIndex*list_dis,Listtime,Listcount);
+				controlNew.beginParallel();
+				elementListFocus.setEffect(tempEffect);
+				elementListFocus.doEffect();
+				for(var i=0; i<elementListLength; i++){
+					elementList[i].string=list[i].getAttribute("title");
+					elementList[i].color = listFontColor;//elementList[i].color = (i == 0) ? listFocusFontColor : listFontColor;
+					elementList[i].size = (i == 0) ? listFocusFont : listFont;
+					elementList[i].setEffect(listFocusBottomEffect);
+					elementList[i].doEffect();						
+				}
+				controlNew.endParallel();
+				elementList[0].color = listFocusFontColor;
+			}
+			break;
+		case 6: //焦点回滚到list的最后一个位置
+			{
+				var len = Math.min(list.length, elementListLength);
+				elementListFocusFlag = list.length - 1;
+				predisplayFocusIndex = displayFocusIndex;
+				displayFocusIndex = len - 1;
+				var index = elementListFocusFlag - len + 1;
+				tempEffect = new Effect("move",list_left,list_top+predisplayFocusIndex*list_dis,list_left,list_top+displayFocusIndex*list_dis,Listtime,Listcount);
+				controlNew.beginParallel();
+				elementListFocus.setEffect(tempEffect);
+				elementListFocus.doEffect();
+				for(var i=0; i<len; i++){
+					elementList[i].string=list[index].getAttribute("title");
+					elementList[i].color = listFontColor;//elementList[i].color = (i == len - 1) ? listFocusFontColor : listFontColor;
+					elementList[i].size = (i == len - 1) ? listFocusFont : listFont;
+					elementList[i].setEffect(listFocusBottomEffect);
+					elementList[i].doEffect();	
+					index++;					
+				}
+				controlNew.endParallel();
+				elementList[len - 1].color = listFocusFontColor;
+			}
+			break;
+		default:
+			break;
+	}
+}
+
+function getSid(){
+	try{
+		return Utility.getSystemInfo("SID");
+	}catch(e){
+		return 0;
+	}		
+}
+
+
+function getUserId(){
+	return Utility.getSystemInfo("UID");
+}
+
+
+
+function changeMenu(type){
+	showListItem();
+	cutAds(type);
+}
+
+
+
+/******************move the text to up and down ***********/
+var url;
+function funonclick(menuid,id, attrubuteName){
+	setGlobalVar("currentFocus", elementFocusFlag);//用来记住menu焦点
+	setGlobalVar("elementListFocusFlagId", elementListFocusFlag);	
+	setGlobalVar("displayFocusIndex", displayFocusIndex);			 
+	
+	if (attrubuteName == ""){
+		//var list = menu[menuid].getElementsByTagName("movie");
+		var onclick = list[id].getAttribute("onclick");
+		var title = list[id].getAttribute("title");
+		url = list[id].getAttribute("url");
+		var checkFlag=list[id].getAttribute("checkFlag");
+		
+		if(checkFlag=="y")
+        {
+			var sid=getSid();
+			var uid=getUserId();
+			if(sid==""||sid ==undefined||uid==""||uid==undefined){
+			    location.href =	"noPermission.htm";
+			}
+			
+	
+		}
+				
+	    var panel=list[id].getAttribute("panel");
+		if(panel!=""&&panel != undefined&&panel!="null")
+       {
+	AppManager.invoke("Panel",panel, "");
+       }
+		
+	
+		if(onclick){
+			eval(onclick+"()");
+			return;
+		}
+		location.href = url;
+	}else{
+		clickNumber(attrubuteName);
+	}
+
+}//end funonclick
+
+function gotoOther(){
+	if(url.indexOf("?") > 0){
+	    url += "&userId=" + "$!userId";
+	}else{
+		url += "?userId=" + "$!userId";
+	}
+	location.href = url;
+}//end gotoOther
+
+function gotoEpg(){
+	//zoom
+	var controlZoom = new EffectControl();
+	controlZoom.setPageEffect("blendzoom");
+	if(url.indexOf("?") > 0){
+		location.href = "$!iEPGURL" + "/T-nsp/" + url + "&userId=" + "$!userId";
+	}else{
+		location.href = "$!iEPGURL" + "/T-nsp/" + url + "?userId=" + "$!userId";
+	}
+}//end gotoEpg
+
+function gotoZoom(){
+	//zoom
+	var controlZoom = new EffectControl();
+	controlZoom.setPageEffect("blendzoom");
+	location.href =  url;
+}//end gotoZoom
+
+function clickNumber(attrubuteName){
+	setGlobalVar('detailBack',location.href);	 
+	var temp = list[elementListFocusFlag].getAttribute(attrubuteName);
+	if(temp == null)
+		return;
+	location.href = temp;
+}
+var listtimer;
+
+document.onkeydown = function(e){
+	if(ajaxFinish == 0)
+	return;
+	var val =  e.which || e.keyCode;  
+	//alert(val);
+	var type;
+	switch(val){	
+		case 640: //return
+			e.preventDefault();
+			break;
+		case 27:
+			e.preventDefault();
+			AppManager.startLocalAppByID("com_coship_app_dvbplayer",'');
+			break;
+		case 39:   //right
+		case 37:   //left
+			 clearTimeout(timer);
+			 e.preventDefault();
+			 if (val == 39) type = -1;
+			 else type = 1;
+			 KeyLeftandRight(type);
+			 timer = setTimeout("changeMenu(" + type + ");",300);
+			 break;
+		case 40:  //bottom
+		case 38:  //top
+			 clearTimeout(listtimer);
+			 e.preventDefault();  
+			 if (val == 40) type = 1;
+			 else type = -1;
+			 keyUpDown(type);
+			 listtimer = setTimeout("cutAds(" + type + ");",300);
+			 break; 
+		case 13: //enter			 
+			 funonclick(elementFocusFlag,elementListFocusFlag, "");
+			 break;
+		case 49:	//1
+		case 50:	//
+		case 51:	//3
+		case 52:	//4
+		case 53:	//5
+		case 54:	//6
+			 funonclick(elementFocusFlag,elementListFocusFlag, "url_" + (val - 49));
+			break;
+		case 468://主页
+			break;
+		default:
+			 break;
+	}
+}//end grabDown
+
+window.onload = loadPage();
+
+</script>
+</head>
+<body>
+<div id="content"></div>
+</body>
+</html>

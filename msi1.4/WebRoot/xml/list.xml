@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+             
+<tree>
+ <config index="1" maxPage="6" menuLength="7" bgImage="images/wb.jpg" list_left="542" list_top="266"  list_width="196" list_height="40" list_dis="40"  idprefix="menu_2_" style_width="207" style_heitht="40"  style_font_size="26" style_font_color="0xffffffff" style_text_align="center" onfocusFonts_color="0xff000000" onfocusImage="images/in_cur.png" onfocusImage_left="542" onfocusImage_top="266"  onfocusImage_width="196" onfocusImage_height="40" onblurImage="images/bk.gif" upFun="upFunction" downFun="downFunction" pic_left="125" pic_top="68" pic_width="95" pic_height="93" pic_dis="155" listTopArrow="images/mid_t.png" listTopArrow_left="627" listTopArrow_top="244" listTopArrow_width="19" listTopArrow_height="17" listBottomArrow="images/mid_f.png" listBottomArrow_left="627" listBottomArrow_top="512" listBottomArrow_width="19" listBottomArrow_height="13" weatherList_url1="http://172.31.10.176/wfs/weather/stb/weatherdata/getWeatherN.action?datenum=3&amp;cityId=480" weatherList_url2="http://172.31.10.176/wfs/weather/stb/weatherdata/getWeatherN.action?datenum=3&amp;cityId=480" imageHost="http://172.31.10.74"/>
+     <ads id="" ads_left0="67"  ads_left1="223" ads_left2="379" 
+                    ads_left3="745" ads_left4="901" ads_left5="1057" 
+                    ads_top="222" ads_width="156" ads_height="338" 
+                    adsSuffix=".png"/>
+     <data> 
+	       <cate id="1"  title="数字电视"  pic="images/nav_3.png" icon="images/nav_03.png" >
+		         <movie id="1" title="数字电视" 
+                    onclick="AppManager.startLocalAppByID(&quot;com_coship_app_dvbplayer&quot;,'{&quot;ServiceListType&quot;:&quot;SDTV&quot;}')" url="SDTV"
+                        adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="vod"  checkFlag="y" /> 
+             <movie id="2" title="境外频道" 
+                    onclick="" url="weixing.html"
+                        adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="vod"  checkFlag="y" /> 
+             <movie id="3" title="节目回看" 
+                        onclick="" url="http://172.31.10.30/HD/200908151100/toTimeshift.htm" 
+                        adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="vod"  checkFlag="y" />  
+             <movie id="4" title="江城眼" 
+                       onclick="" url="http://172.31.10.30/HD/200908151100/index_dsjt.htm" 
+                        adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                       panel="vod"  checkFlag="y" />                     
+	       </cate>
+         <cate id="2"  title="酒店影院" pic="images/nav_4.png" icon="images/nav_04.png">
+		         <movie id="1" title="高清电影" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data" /> 
+		         <movie id="2" title="标清电影"  
+                         onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+		         <movie id="3" title="电视剧专区" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  />
+	       </cate>
+	       <cate id="3"  title="酒店频道" pic="images/nav_5.png" icon="images/nav_05.png"> 
+		        <movie id="1" title="酒店介绍" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="data" /> 
+	           <movie id="2" title="特惠臻礼" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data" />
+             <movie id="3" title="时尚客房" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data" /> 
+             <movie id="4" title="餐厅酒吧" onclick="" 
+                        url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+		         <movie id="5" title="康乐休闲" onclick="" 
+                        url="er.html" adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+<movie id="6" title="酒店美食" onclick="" 
+                        url="er.html" adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+<movie id="6" title="酒店购物" onclick="" 
+                        url="er.html" adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+<movie id="6" title="租车服务" onclick="" 
+                        url="er.html" adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+<movie id="6" title="洗衣服务" onclick="" 
+                        url="er.html" adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+<movie id="6" title="商务中心" onclick="" 
+                        url="er.html" adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  />
+<movie id="6" title="常用电话" onclick="" 
+                        url="er.html" adsPrefix="images/one-0" 
+                        adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+	       </cate>
+         <cate id="4"  title="奢华世界" pic="images/nav_7.png" icon="images/nav_07.png"> 
+		         <movie id="1" title="娱乐食尚" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+             <movie id="2" title="美容养生" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+             <movie id="3" title="风尚元素" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+<movie id="4" title="格调红酒" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+             <movie id="5" title="运动旅行" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+             <movie id="6" title="电子书吧" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+	       </cate>
+	       <cate id="5"  title="账务中心" pic="images/nav_2.png" icon="images/nav_02.png">
+		         <movie id="1" title="账单查询" 
+                        onclick="" url="er.html" 
+                        adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                        panel="data"  /> 
+         </cate>
+         <cate id="6"  title="网络服务" pic="images/nav_6.png" icon="images/nav_06.png">	  
+	           <movie id="1" title="网上冲浪" 
+                   onclick="" url="er.html" 
+                   adsPrefix="images/one-0" 
+                   adsClick="adsClick({0},{1},{2})" 
+                   panel="data"  /> 
+         </cate>
+	       <cate id="7"  title="旅游资讯" pic="images/nav_1.png" icon="images/nav_01.png"> 
+	           <movie id="1" title="江城旅游" 
+                   onclick="" url="er.html" 
+                   adsPrefix="images/one-0" adsClick="adsClick({0},{1},{2})" 
+                   panel="data"  /> 
+             <movie id="2" title="江城文艺" 
+                   onclick="" url="er.html" 
+                   adsPrefix="images/one-0" 
+                   adsClick="adsClick({0},{1},{2})" 
+                   panel="data"  />
+             <movie id="3" title="旅行工具" 
+                   onclick="" url="er.html" 
+                   adsPrefix="images/one-0" 
+                   adsClick="adsClick({0},{1},{2})" 
+                   panel="data"  />
+             <movie id="4" title="公告资讯" 
+                   onclick="" url="er.html" 
+                   adsPrefix="images/one-0" 
+                   adsClick="adsClick({0},{1},{2})" 
+                   panel="data"  />  
+               
+	       </cate>
+     </data>
+
+     <showInfo id="">
+        <info info_type="image" 
+              info_left="80" info_top="601" info_width="363" info_height="54" 
+              info_info="images/bo_l.png" info_size="" info_visibility="" />
+	     
+ <info info_type="image" info_left="810" info_top="611" info_width="112" 
+              info_height="32" info_info="" info_size="" info_visibility="" />
+   	    
+<info info_type="image" info_left="930" info_top="608" info_width="65" info_height="50" 
+              info_info="" info_size="" info_visibility="" />
+ 
+<info info_type="text" info_left="1005" info_top="610" info_width="150" info_height="20" 
+              info_info="" info_size="18" info_visibility="true" />
+	      
+<info info_type="text" info_left="1005" info_top="635" info_width="220" info_height="20" 
+              info_info="" info_size="18" info_visibility="" />
+  	   
+     </showInfo>
+
+</tree>
